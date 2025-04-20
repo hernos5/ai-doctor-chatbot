@@ -10,10 +10,9 @@ import subprocess
 ELEVENLABS_API_KEY = os.environ.get("ELEVENLABS_API_KEY")
 
 def speak_response(text):
-    """Convert text to speech and play it"""
+    """Convert text to speech"""
     try:
-        # Use ElevenLabs if available
-        if ELEVENLABS_API_KEY:
+        if ELEVENLABS_API_KEY:  # Use ElevenLabs if available
             client = ElevenLabs(api_key=ELEVENLABS_API_KEY)
             audio = client.generate(
                 text=text,
@@ -25,9 +24,11 @@ def speak_response(text):
             tts = gTTS(text=text, lang='en')
             tts.save("response.mp3")
             
-        # Play audio
-        subprocess.run(["ffplay", "-nodisp", "-autoexit", "response.mp3"], 
-                      stderr=subprocess.DEVNULL)
-        
+        # Cross-platform playback
+        subprocess.run(
+            ["ffplay", "-nodisp", "-autoexit", "response.mp3"],
+            stderr=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL
+        )
     except Exception as e:
-        print(f"Voice synthesis error: {e}")
+        print(f"Voice error: {e}")
